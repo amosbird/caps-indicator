@@ -1,0 +1,13 @@
+[
+    {
+        "arguments": [
+            "cc",
+            "-c",
+            "-o",
+            "x11-indicator.o",
+            "x11-indicator.c"
+        ],
+        "directory": "/home/amos/git/x11-indicator",
+        "file": "x11-indicator.c"
+    }
+]
