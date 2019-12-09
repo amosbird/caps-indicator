@@ -4,7 +4,7 @@ LD = $(CXX)
 LDFLAGS := $(CXXFLAGS) $(LDFLAGS) -lX11 -lxcb -lxcb-shape
 PREFIX ?= /usr/local
 
-x11-indicator: caps-indicator.o
+caps-indicator: caps-indicator.o
 	$(LD) $^ -o $@ $(LDFLAGS)
 
 %.o: %.cpp
