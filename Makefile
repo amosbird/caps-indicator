@@ -14,10 +14,10 @@ clean:
 	$(RM) -rf *.o *.d caps-indicator
 
 install: caps-indicator
-	install -Dm755 caps-indicator ${PREFIX}/bin/caps-indicator
+	install -Dm755 caps-indicator ${DESTDIR}${PREFIX}/bin/caps-indicator
 
 uninstall:
-	rm -f ${PREFIX}/bin/caps-indicator
+	rm -f ${DESTDIR}${PREFIX}/bin/caps-indicator
 
 DEPS := caps-indicator.d
 -include $(DEPS)
