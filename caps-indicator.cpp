@@ -84,11 +84,12 @@ static xcb_screen_t* get_screen(const xcb_setup_t* setup, int screen_num) {
     return screen;
 }
 
+/* To change the color of the rectangle change the RGB value in values[]*/
 static void draw_rectangle(XCBGrabContext* c) {
     xcb_gcontext_t gc = xcb_generate_id(c->conn);
     uint32_t mask = XCB_GC_FOREGROUND | XCB_GC_BACKGROUND | XCB_GC_LINE_WIDTH | XCB_GC_LINE_STYLE
         | XCB_GC_FILL_STYLE;
-    uint32_t values[] = { 0x8EBF1F, c->screen->white_pixel, (uint32_t)c->region_border,
+    uint32_t values[] = { 0x62118D, c->screen->white_pixel, (uint32_t)c->region_border,
         XCB_LINE_STYLE_SOLID, XCB_FILL_STYLE_OPAQUE_STIPPLED };
     xcb_rectangle_t r = { 1, 1, (uint16_t)(c->width + c->region_border * 2 - 3),
         (uint16_t)(c->height + c->region_border * 2 - 3) };
