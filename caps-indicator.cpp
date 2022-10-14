@@ -62,7 +62,7 @@ static pid_t lock_exclusively(const int fd) {
 
 #define BORDER_SIZE 24
 typedef struct XCBGrabContext {
-    xcb_connection_t* conn;
+    xcb_connection_t* conn = NULL;
     xcb_screen_t* screen;
     xcb_window_t window;
     int x = BORDER_SIZE, y = BORDER_SIZE;
@@ -173,6 +173,9 @@ static int update(XCBGrabContext* c) {
     caps = (state & 0x01) == 1;
 
     if (caps) {
+        if (c->conn)
+            return 0;
+
         c->conn = xcb_connect(NULL, &screen_num);
         if ((ret = xcb_connection_has_error(c->conn))) {
             die("Cannot open default display, error %d.\n", ret);
@@ -216,11 +219,11 @@ static int update(XCBGrabContext* c) {
             free(event);
         }
     } else {
-        if (c->window) {
+        if (c->conn) {
             xcb_destroy_window(c->conn, c->window);
-            c->window = 0;
             xcb_flush(c->conn);
             xcb_disconnect(c->conn);
+            c->conn = NULL;
         }
     }
     return 0;
@@ -230,7 +233,7 @@ static int update_fcitx(bool active, XCBGrabContext* c) {
     int screen_num, caps, ret;
 
     if (active) {
-        if (c->window)
+        if (c->conn)
             return 0;
 
         c->conn = xcb_connect(NULL, &screen_num);
@@ -275,19 +278,19 @@ static int update_fcitx(bool active, XCBGrabContext* c) {
             free(event);
         }
     } else {
-        if (c->window) {
+        if (c->conn) {
             xcb_void_cookie_t cookie = xcb_destroy_window_checked(c->conn, c->window);
             xcb_generic_error_t* error;
             if ((error = xcb_request_check(c->conn, cookie))) {
                 perror("Could not destroy the window");
                 exit(1);
             }
-            c->window = 0;
             if (xcb_flush(c->conn) < 0) {
                 perror("xcb_flush failed");
                 exit(1);
             }
             xcb_disconnect(c->conn);
+            c->conn = NULL;
         }
     }
     return 0;
